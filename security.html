@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'none'; style-src 'self'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; frame-src 'none'; form-action 'none'; base-uri 'none'; manifest-src 'none'; worker-src 'none'"
+  >
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta
+    name="description"
+    content="WrapDeck's security summary explains its static architecture, session-only data handling, no backend, no analytics, no storage, and strict browser controls."
+  >
+  <meta name="application-name" content="WrapDeck">
+  <meta name="theme-color" content="#f7f0e6">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="WrapDeck">
+  <meta property="og:title" content="Security Summary - WrapDeck">
+  <meta property="og:description" content="A plain-English summary of WrapDeck's static architecture, session-only behavior, and strict browser controls.">
+  <meta property="og:url" content="https://wrapdeck.app/security.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Security Summary - WrapDeck">
+  <meta name="twitter:description" content="A plain-English summary of WrapDeck's static architecture, session-only behavior, and strict browser controls.">
+  <link rel="canonical" href="https://wrapdeck.app/security.html">
+  <title>Security Summary - WrapDeck</title>
+  <link rel="stylesheet" href="privacy.css">
+</head>
+<body>
+  <header class="topbar">
+    <strong>WrapDeck</strong>
+    <span>Security summary</span>
+  </header>
+
+  <main>
+    <h1>Security And Privacy Summary</h1>
+    <p class="date">For plain-English review of the current static WrapDeck app.</p>
+
+    <div class="summary">
+      <strong>Short version:</strong>
+      WrapDeck is a static, session-only note assembly page. The app code does not save, upload, analyze, or remember what is typed.
+    </div>
+
+    <h2>Architecture</h2>
+    <ul>
+      <li>Static first-party HTML, CSS, and JavaScript.</li>
+      <li>No backend application server.</li>
+      <li>No admin login or admin routes.</li>
+      <li>No accounts, OAuth, API endpoints, or database.</li>
+      <li>No AI service or CRM automation.</li>
+    </ul>
+
+    <h2>Data Handling</h2>
+    <ul>
+      <li>Templates, Quick pieces, notes, custom order, and scratchpad text live in the current browser tab's temporary memory.</li>
+      <li>Refreshing or closing the tab clears the session.</li>
+      <li>WrapDeck does not use cookies, localStorage, sessionStorage, IndexedDB, Cache API storage, or service worker registration.</li>
+      <li>WrapDeck does not read clipboard contents.</li>
+      <li>Copy actions write text to the clipboard only after the user clicks an explicit Copy/New Call/Clear action.</li>
+    </ul>
+
+    <h2>Network Behavior</h2>
+    <ul>
+      <li>After the page loads, WrapDeck's app code does not make runtime network requests.</li>
+      <li>The Content Security Policy uses <code>connect-src 'none'</code> to block script-initiated connections.</li>
+      <li>No remote fonts, images, scripts, stylesheets, analytics pixels, or third-party runtime assets are used by the app code.</li>
+      <li>The static host can still receive ordinary request metadata when someone loads a page, like any website host.</li>
+    </ul>
+
+    <h2>Browser Controls</h2>
+    <ul>
+      <li>Content Security Policy blocks inline scripts, object/media/frame loads, worker loads, form submission, and script connections.</li>
+      <li>Deployment headers include no-store and no-transform so the host should not cache or rewrite the HTML.</li>
+      <li>Permissions Policy disables clipboard-read and other browser capabilities the app does not need.</li>
+      <li>Search-engine directives request no indexing, but they are not access control.</li>
+    </ul>
+
+    <h2>Limits</h2>
+    <ul>
+      <li>This summary does not claim workplace authorization or suitability for sensitive information.</li>
+      <li>Managed browsers, extensions, devices, networks, screenshot tools, and destination systems may still observe user activity outside WrapDeck's control.</li>
+      <li>Official records should remain in the usual systems and workflows.</li>
+    </ul>
+
+    <p><a href="index.html">Return to WrapDeck</a></p>
+  </main>
+</body>
+</html>

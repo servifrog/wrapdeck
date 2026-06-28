@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'none'; style-src 'self'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; frame-src 'none'; form-action 'none'; base-uri 'none'; manifest-src 'none'; worker-src 'none'"
+  >
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta
+    name="description"
+    content="WrapDeck's privacy policy explains its session-only browser behavior, no accounts, no analytics, no storage, no clipboard reading, and no uploaded notes."
+  >
+  <meta name="application-name" content="WrapDeck">
+  <meta name="theme-color" content="#f7f0e6">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="WrapDeck">
+  <meta property="og:title" content="Privacy Policy - WrapDeck">
+  <meta property="og:description" content="WrapDeck is session-only: no accounts, analytics, cookies, storage, clipboard reading, or uploaded notes.">
+  <meta property="og:url" content="https://wrapdeck.app/privacy.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Privacy Policy - WrapDeck">
+  <meta name="twitter:description" content="WrapDeck is session-only: no accounts, analytics, cookies, storage, clipboard reading, or uploaded notes.">
+  <link rel="canonical" href="https://wrapdeck.app/privacy.html">
+  <title>Privacy Policy - WrapDeck</title>
+  <link rel="stylesheet" href="privacy.css">
+</head>
+<body>
+  <header class="topbar">
+    <strong>WrapDeck</strong>
+    <span>Privacy policy</span>
+  </header>
+
+  <main>
+    <h1>Privacy Policy</h1>
+    <p class="date">Effective and last updated: June 24, 2026</p>
+
+    <div class="summary">
+      <strong>Plain-language summary:</strong>
+      WrapDeck processes templates, Quick Forms, Note Blocks, Scratchpad text, saved non-call reference text, and notes only inside your current browser tab. The app does not upload, save, sync, analyze, sell, or share the text you enter.
+    </div>
+
+    <h2>What WrapDeck processes</h2>
+    <p>
+      WrapDeck processes the templates, Quick Forms, Note Blocks, saved non-call reference text, custom details, transfer destinations, Scratchpad text, and dock edits that you enter so it can assemble plain text in your browser.
+      This processing happens in the browser tab's temporary memory.
+    </p>
+
+    <h2>What WrapDeck does not collect</h2>
+    <ul>
+      <li>No accounts, names, email addresses, or login information.</li>
+      <li>No analytics, tracking pixels, advertising systems, or behavioral profiles.</li>
+      <li>No cookies, local storage, session storage, IndexedDB, saved history, or service worker.</li>
+      <li>No uploaded templates, note contents, Quick Forms, Note Blocks, saved reference text, Scratchpad text, setup strings, or dock edits.</li>
+      <li>No clipboard reading.</li>
+    </ul>
+
+    <h2>Temporary session data</h2>
+    <p>
+      Templates, Quick Forms, Note Blocks, saved reference text, Scratchpad text, current notes, and manual edits exist only in the current browser tab's memory.
+      Refreshing or closing the tab destroys this session data. WrapDeck does not provide recovery or history.
+      When session data is present, WrapDeck asks the browser to warn before a refresh or tab close, but browsers may choose how or whether to display that warning.
+      If you explicitly save a generated Build As You Go note as a template, it becomes reusable Full Template text for this tab session.
+    </p>
+
+    <h2>Setup strings</h2>
+    <p>
+      Setup strings beginning with WDSTRING_V1 export reusable workbench state, including saved non-call reference text and Full Templates explicitly saved from Build As You Go, as plain text after an explicit user action.
+      They do not save to the browser, disk, backend, or network.
+      WDSTRING_V1 setup strings must not automatically include current-call note content, scratchpad text, transfer destinations, or active Quick Form content.
+    </p>
+
+    <h2>Clipboard use</h2>
+    <p>
+      WrapDeck writes plain text to the system clipboard only after explicit user actions.
+      Each copy action has a bounded target, such as the current call note, an active Quick Form, a setup string, Full Templates, Note Blocks, saved non-call reference text, or a valid Full Template copied as is.
+      New Call + Clear Clipboard and Clear Entire Session attempt to overwrite the clipboard with an empty value.
+      Your browser or device may block clipboard access. WrapDeck does not read clipboard contents.
+    </p>
+
+    <h2>Network activity and hosting logs</h2>
+    <p>
+      After the page is loaded, WrapDeck's app code does not make network requests. Its Content Security Policy blocks script-initiated connections.
+      WrapDeck is hosted on Cloudflare Pages.
+      Cloudflare may receive ordinary request metadata when you open this page or the privacy policy, such as an IP address, browser information, date, and time.
+      Cloudflare's privacy and retention practices apply to hosting request metadata.
+      WrapDeck does not add app analytics, tracking pixels, or client-side telemetry.
+    </p>
+
+    <h2>Security controls</h2>
+    <p>
+      WrapDeck uses a restrictive Content Security Policy and deployment response headers intended to block runtime network connections, inline code, framing, browser caching, referrer leakage, and search indexing.
+      Search-engine directives are not access control, and no browser control can prevent observation by software or people with access to the device.
+    </p>
+
+    <h2>Managed devices and systems</h2>
+    <p>
+      WrapDeck cannot control or prevent monitoring performed by a managed browser, browser extension, computer, network, security product, screenshot tool, or destination system.
+      Applicable policies and review requirements still apply.
+    </p>
+
+    <h2>Sensitive information</h2>
+    <p>
+      WrapDeck is for temporary note assembly in the current browser tab.
+      Do not use WrapDeck as a records system, storage system, or source of truth.
+      Keep official records in the usual systems and workflows.
+    </p>
+
+    <h2>Sharing, selling, and automated decisions</h2>
+    <p>
+      WrapDeck does not sell or share personal information, use note contents for advertising, train an AI model, or make automated decisions about people.
+    </p>
+
+    <h2>Browser privacy signals</h2>
+    <p>
+      WrapDeck does not use cross-site tracking, targeted advertising, analytics, cookies, or sale/sharing of personal information.
+      Because the app does not perform those activities, browser privacy signals such as Do Not Track or Global Privacy Control do not change the app's behavior.
+    </p>
+
+    <h2>Changes to this policy</h2>
+    <p>
+      If WrapDeck's data practices change, this policy must be updated before the changed version is deployed.
+      The effective date at the top identifies the current version.
+    </p>
+
+    <h2>Operator and contact</h2>
+    <p>
+      For privacy or security questions, email privacy [at] wrapdeck.app.
+      For general feedback, email feedback [at] wrapdeck.app.
+    </p>
+
+    <p><a href="index.html">Return to WrapDeck</a></p>
+  </main>
+</body>
+</html>

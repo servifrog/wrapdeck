@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; img-src 'none'; font-src 'none'; object-src 'none'; media-src 'none'; frame-src 'none'; form-action 'none'; base-uri 'none'; manifest-src 'none'; worker-src 'none'"
+  >
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta
+    name="description"
+    content="WrapDeck is a private, session-only browser tool for turning approved phrases into plain-text call wrap-up notes without saving or uploading what you type."
+  >
+  <meta name="application-name" content="WrapDeck">
+  <meta name="theme-color" content="#eef1f3">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WrapDeck">
+  <meta property="og:title" content="WrapDeck - Private Call Note Builder">
+  <meta property="og:description" content="Build plain-text call wrap-up notes from approved phrases in a private, session-only browser tab.">
+  <meta property="og:url" content="https://wrapdeck.app/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="WrapDeck - Private Call Note Builder">
+  <meta name="twitter:description" content="Build plain-text call wrap-up notes from approved phrases in a private, session-only browser tab.">
+  <link rel="canonical" href="https://wrapdeck.app/">
+  <title>WrapDeck - Private Call Note Builder</title>
+  <link rel="stylesheet" href="styles.css?v=20260628-chrome-min-fill-2">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand">
+        <h1>
+          <span>WrapDeck</span>
+          <span class="beta-badge">Beta</span>
+          <a
+            class="info-button"
+            href="guide.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open the 60-second guide"
+            title="60-second guide"
+          >?</a>
+        </h1>
+      </div>
+      <div class="header-actions">
+        <div class="zoom-controls" aria-label="App zoom">
+          <button id="zoomOut" type="button" aria-label="Zoom out" title="Zoom out">−</button>
+          <button class="zoom-level-reset" id="zoomLevel" type="button" aria-label="Reset zoom to 100%" title="Reset zoom to 100%" aria-live="polite">100%</button>
+          <button id="zoomIn" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+        </div>
+        <div class="theme-switcher" aria-label="Theme">
+          <button class="theme-button is-light" id="themeLight" type="button" aria-label="Light theme" title="Light theme" aria-pressed="true"></button>
+          <button class="theme-button is-blackout" id="themeBlackout" type="button" aria-label="Operator Blackout theme" title="Operator Blackout theme" aria-pressed="false"></button>
+        </div>
+        <span class="session-stat"><strong id="headerTemplateCount">0</strong> templates</span>
+        <button class="danger" id="clearSession" type="button" aria-label="Clear entire session" title="Clear entire session">
+          <span class="wide-label">Clear Entire Session</span>
+          <span class="compact-label">Clear</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="privacy" aria-label="Privacy mode status">
+      <span class="privacy-dot" aria-hidden="true"></span>
+      <div>
+        <div class="privacy-title">Private session</div>
+        <p>WrapDeck runs in this tab. It does not save or upload what you type. Refreshing or closing the tab clears the session.</p>
+      </div>
+      <a class="privacy-link" href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy policy</a>
+    </section>
+
+    <aside class="what-is-wrapdeck" aria-label="What is WrapDeck">
+      <div class="what-title">What is WrapDeck?</div>
+      <p>WrapDeck is a session-only sidecar for turning approved phrases into a clean plain-text call wrap-up note.</p>
+      <p class="what-tip">Pop this tab into its own skinny window, park it beside your work, then load templates, build the note, and copy the valid note when it is ready.</p>
+      <a class="what-guide-link" href="guide.html" target="_blank" rel="noopener noreferrer">60-second tutorial</a>
+      <p class="what-contact">wrapdeck.app · Built by David Ruiz · Feedback: feedback [at] wrapdeck.app</p>
+    </aside>
+
+    <section class="workspace">
+      <section class="panel setup-panel is-collapsed" id="setupPanel">
+        <div class="panel-head panel-head-row">
+          <div class="panel-title-group">
+            <div class="title-line">
+              <div class="section-title">Board Setup</div>
+              <button
+                class="info-tip"
+                type="button"
+                aria-expanded="false"
+                aria-label="Board Setup details: paste a WDSTRING setup string to restore a board, or paste one or more full template lines to create Full Template cards. Current call note stays empty."
+                data-tip="Paste a WDSTRING setup string to restore a board, or paste one or more full template lines to create Full Template cards. Current call note stays empty."
+              >?</button>
+            </div>
+            <p class="panel-summary" id="setupSummary">Load a saved board or template deck.</p>
+          </div>
+          <div class="panel-head-actions">
+            <button class="quiet-button setup-string-head-button" id="copySetupString" type="button">Copy setup</button>
+            <button class="quiet-button" id="toggleSetup" type="button" aria-expanded="false" aria-controls="setupBody">Open Setup</button>
+          </div>
+        </div>
+        <div class="panel-body" id="setupBody">
+          <label class="subhead" for="templateInput">Board setup or full templates</label>
+          <textarea
+            id="templateInput"
+            maxlength="100000"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="Paste a WDSTRING_V1 setup string, one full template, or several full templates"
+          ></textarea>
+          <p class="template-example">Setup strings restore a board. Template lines create Full Template cards.</p>
+          <p class="template-example">
+            Generic template example:
+            <code>CALL START// verified greeting// explained options// CALL END</code>
+          </p>
+          <div class="row wrap template-actions">
+            <button class="primary" id="loadTemplates" type="button">Load Board or Templates</button>
+          </div>
+
+          <div class="rule-card is-collapsed" id="rulesPanel" aria-label="Session note rules">
+            <div class="mini-panel-head">
+              <div class="subhead">Note wording rules</div>
+              <button class="quiet-button" id="toggleRules" type="button" aria-expanded="false" aria-controls="rulesBody">Open</button>
+            </div>
+            <div id="rulesBody">
+              <div class="rule-grid">
+                <label>
+                  <span class="subhead">Start phrase</span>
+                  <input
+                    id="ruleStart"
+                    type="text"
+                    maxlength="80"
+                    autocomplete="off"
+                    spellcheck="false"
+                    value="CALL START"
+                  >
+                </label>
+                <label>
+                  <span class="subhead">Ended phrase</span>
+                  <input
+                    id="ruleCallEnded"
+                    type="text"
+                    maxlength="120"
+                    autocomplete="off"
+                    spellcheck="false"
+                    value="CALL END"
+                  >
+                </label>
+                <label>
+                  <span class="subhead">Transfer phrase</span>
+                  <input
+                    id="ruleTransferPrefix"
+                    type="text"
+                    maxlength="120"
+                    autocomplete="off"
+                    spellcheck="false"
+                    value="TRANSFER TO"
+                  >
+                </label>
+              </div>
+              <div class="row wrap rule-actions">
+                <button id="applyRules" type="button">Apply Rules</button>
+                <button id="resetRules" type="button">Default Rules</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel scratchpad-panel" id="scratchpadPanel">
+        <div class="panel-head panel-head-row">
+          <div class="panel-title-group">
+            <div class="title-line">
+              <div class="section-title">Scratchpad</div>
+              <button
+                class="info-tip"
+                type="button"
+                aria-expanded="false"
+                aria-label="Scratchpad details: temporary session notes only. Scratchpad text never copies into the final note and is excluded from setup strings."
+                data-tip="Temporary session notes only. Scratchpad text never copies into the final note and is excluded from setup strings."
+              >?</button>
+            </div>
+            <p class="panel-summary" id="scratchpadSummary">Temporary notes. Not copied.</p>
+          </div>
+          <button class="quiet-button" id="toggleScratchpad" type="button" aria-expanded="false" aria-controls="scratchpadBody">Open</button>
+        </div>
+        <div class="panel-body" id="scratchpadBody">
+          <div id="scratchpadHome"></div>
+          <div class="scratchpad-work-surface" id="scratchpadWorkSurface">
+            <textarea
+              id="scratchpad"
+              class="scratchpad-textarea"
+              maxlength="5000"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Temporary notes for this session"
+            ></textarea>
+            <button
+              class="list-resize"
+              id="resizeScratchpad"
+              type="button"
+              aria-label="Resize Scratchpad"
+              title="Drag to resize Scratchpad"
+            >
+              <span aria-hidden="true"></span>
+            </button>
+            <div class="scratchpad-actions">
+              <button id="clearScratchpad" type="button" class="danger">Clear Scratchpad</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel saved-reference-panel" id="savedReferencePanel">
+        <div class="panel-head panel-head-row">
+          <div class="panel-title-group">
+            <div class="title-line">
+              <div class="section-title">Saved Reference</div>
+              <button
+                class="info-tip"
+                type="button"
+                aria-expanded="false"
+                aria-label="Saved Reference details: reusable non-call setup text that round-trips with your setup string. Do not put live call, customer, or account details here."
+                data-tip="Reusable non-call setup text that round-trips with your setup string. Do not put live call, customer, or account details here."
+              >?</button>
+            </div>
+            <p class="panel-summary">Reusable setup text.</p>
+          </div>
+          <div class="saved-reference-actions">
+            <button class="quiet-button" id="copySavedReference" type="button">Copy</button>
+            <button class="quiet-button" id="editSavedReference" type="button">Edit</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <p class="saved-reference-view" id="savedReferenceView" tabindex="0">No saved reference text.</p>
+          <div class="saved-reference-editor" id="savedReferenceEditorWrap" hidden>
+            <textarea
+              id="savedReferenceEditor"
+              maxlength="4000"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Reusable non-call text to restore with your setup string"
+            ></textarea>
+            <div class="saved-reference-edit-actions">
+              <button class="primary" id="saveSavedReference" type="button">Save reference</button>
+              <button id="cancelSavedReference" type="button">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel build-panel" id="buildPanel">
+        <div class="panel-head panel-head-row">
+          <div class="panel-title-group">
+            <div class="title-line">
+              <div class="section-title">Build As You Go</div>
+              <button
+                class="info-tip"
+                type="button"
+                aria-expanded="false"
+                aria-label="Build As You Go details: type one note piece at a time, or paste a complete full note or Full Template to replace the current note pieces, ending mode, and transfer target."
+                data-tip="Type one note piece at a time, or paste a complete full note or Full Template to replace the current note pieces, ending mode, and transfer target."
+              >?</button>
+            </div>
+            <p class="panel-summary" id="buildSummary">Type a piece or paste a full note.</p>
+          </div>
+          <div class="panel-head-actions build-head-actions">
+            <button class="quiet-button" id="snapScratchpad" type="button" aria-pressed="false">Scratchpad</button>
+            <button class="quiet-button" id="toggleBuild" type="button" aria-expanded="true" aria-controls="buildBody">Minimize</button>
+          </div>
+        </div>
+        <div class="panel-body composer-stack" id="buildBody">
+          <div class="scratchpad-snap" id="scratchpadSnap" hidden>
+            <div class="mini-panel-head">
+              <span class="subhead">Call Scratchpad</span>
+              <button class="quiet-button" id="sendScratchpadAway" type="button">Send away</button>
+            </div>
+            <div id="scratchpadSnapMount"></div>
+          </div>
+          <div class="current-note-block">
+              <div class="subhead current-note-title">Add piece or paste full note</div>
+            <div class="detail-row">
+              <textarea
+                id="customDetail"
+                rows="3"
+                maxlength="1000"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="Type a note piece, or paste CALL START// ... // CALL END"
+              ></textarea>
+              <button class="primary" id="addDetail" type="button">Add to note</button>
+            </div>
+            <div class="subhead count-head current-piece-title">Pieces in this note <span id="currentPieceCount">0</span></div>
+            <div class="current-list" id="currentList" role="list" aria-label="Current note pieces"></div>
+            <div class="row wrap template-actions">
+              <button id="undoLast" type="button">Undo Last</button>
+              <button class="danger" id="clearCall" type="button">Clear Call</button>
+            </div>
+          </div>
+          <div class="setup-sub note-block-library is-collapsed" id="noteBlockLibrary">
+            <div class="setup-sub-head">
+              <span class="subhead count-head">Optional reusable phrases <span id="quickPieceCount">0</span></span>
+              <button
+                class="quiet-button setup-sub-toggle"
+                id="toggleNoteBlockLibrary"
+                type="button"
+                aria-expanded="false"
+                aria-controls="noteBlockLibraryBody"
+              >Show phrases</button>
+            </div>
+            <div class="setup-sub-body note-block-library-body" id="noteBlockLibraryBody">
+              <div class="quick-head">
+                <label class="sort-select-label" for="quickSortSelect">Sort</label>
+                <select class="sort-select" id="quickSortSelect" aria-label="Sort reusable phrases">
+                  <option value="workflow">Workflow</option>
+                  <option value="recent">Recent</option>
+                  <option value="az">A-Z</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+              <p class="sort-help"><strong>Recent:</strong> Newest added/restored first. <strong>Custom:</strong> Session-only order.</p>
+              <input
+                class="quick-filter"
+                id="quickFilter"
+                type="text"
+                maxlength="120"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="Filter reusable phrases"
+              >
+              <div class="setup-sub" id="noteBlockSetup">
+                <div class="setup-sub-head">
+                  <span class="subhead">Save reusable phrase</span>
+                  <button
+                    class="quiet-button setup-sub-toggle"
+                    id="toggleNoteBlockSetup"
+                    type="button"
+                    aria-expanded="true"
+                    aria-controls="noteBlockSetupBody"
+                  >Hide</button>
+                </div>
+                <div class="setup-sub-body" id="noteBlockSetupBody">
+                  <div class="quick-add">
+                    <input
+                      id="newQuickPiece"
+                      type="text"
+                      maxlength="300"
+                      autocomplete="off"
+                      spellcheck="false"
+                      placeholder="Phrase to reuse later"
+                    >
+                    <button id="addQuickPiece" type="button">Save phrase</button>
+                  </div>
+                  <div class="export-row quick-export">
+                    <button id="copyQuickSetup" type="button">Copy Note Blocks</button>
+                    <span>Copies your reusable blocks as plain text so you can move them elsewhere. Store only where allowed.</span>
+                  </div>
+                  <p class="quick-add-note">Optional fallback. Tap a reusable phrase to add it to the current note.</p>
+                </div>
+              </div>
+              <div class="piece-list" id="pieceList"></div>
+              <button
+                class="list-resize note-blocks-resize"
+                id="resizeNoteBlocks"
+                type="button"
+                aria-label="Resize reusable phrases list"
+                title="Drag to resize reusable phrases"
+              >
+                <span aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel full-template-panel" id="fullTemplatePanel">
+        <div class="panel-head panel-head-row">
+          <div class="panel-title-group">
+            <div class="title-line">
+              <div class="section-title">Full Templates</div>
+              <button
+                class="info-tip"
+                type="button"
+                aria-expanded="false"
+                aria-label="Full Templates details: loaded complete notes live here. Copy a valid template as is, or use Edit in dock to shape it before copying."
+                data-tip="Loaded complete notes live here. Copy a valid template as is, or use Edit in dock to shape it before copying."
+              >?</button>
+            </div>
+            <p class="panel-summary" id="templateSummary">Search the deck, then copy or edit.</p>
+          </div>
+          <button class="quiet-button" id="toggleTemplates" type="button" aria-expanded="true" aria-controls="templateBody">Minimize</button>
+        </div>
+        <div class="panel-body" id="templateBody">
+          <div class="subhead count-head">Loaded templates <span id="templateCount">0</span></div>
+          <p class="template-search-primer" id="templateSearchPrimer">Search by situation, phrase, or transfer.</p>
+          <div class="template-filter-row">
+            <div class="template-filter-field">
+              <input
+                class="template-filter"
+                id="templateFilter"
+                type="text"
+                maxlength="120"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="Search the part you remember"
+                aria-describedby="templateSearchPrimer templateResultState"
+              >
+              <button
+                class="template-filter-clear"
+                id="templateFilterClear"
+                type="button"
+                aria-label="Clear search"
+                title="Clear search (Esc)"
+                hidden
+              >Clear search</button>
+            </div>
+          </div>
+          <div class="template-list" id="templateList"></div>
+          <div class="setup-sub template-tools is-collapsed" id="templateTools">
+            <div class="setup-sub-head">
+              <span class="subhead title-line">Board tools
+                <button
+                  class="info-tip inline-tip"
+                  type="button"
+                  aria-expanded="false"
+                  aria-label="Board tools details: sort, pin, export, or copy the loaded template deck without changing the current call note."
+                  data-tip="Sort, pin, export, or copy the loaded template deck without changing the current call note."
+                >?</button>
+              </span>
+              <button
+                class="quiet-button setup-sub-toggle"
+                id="toggleTemplateTools"
+                type="button"
+                aria-expanded="false"
+                aria-controls="templateToolsBody"
+              >Options</button>
+            </div>
+            <div class="setup-sub-body" id="templateToolsBody">
+              <div class="template-head">
+                <div class="sort-controls template-sort-controls" aria-label="Sort full templates">
+                  <button id="templateSortLoaded" type="button" aria-pressed="true" title="Use loaded/manual order">Loaded</button>
+                  <button id="templateSortAZ" type="button" aria-pressed="false" title="Sort full templates by display title">A–Z</button>
+                  <button id="templateSortCustom" type="button" aria-pressed="false" title="Use in-session custom full-template order">Custom</button>
+                </div>
+              </div>
+              <button
+                class="template-pinned-only"
+                id="templatePinnedOnly"
+                type="button"
+                aria-pressed="false"
+                title="Show only pinned Full templates"
+              >Pinned only</button>
+              <p class="sort-help template-sort-help" id="templateResultState"><strong>Pinned</strong> stay first. <strong>Filter</strong> narrows this list only.</p>
+              <div class="export-row">
+                <button id="copyFullSetup" type="button">Copy loaded templates</button>
+                <span>Copies your loaded template buttons as plain text so you can move this board elsewhere. Store only where allowed.</span>
+              </div>
+            </div>
+          </div>
+          <button
+            class="template-resize"
+            id="resizeTemplates"
+            type="button"
+            aria-label="Resize Full templates list"
+            title="Drag to resize Full templates"
+            >
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel quick-form-panel" id="quickFormsPanel">
+        <div class="panel-head panel-head-row">
+          <div class="panel-title-group">
+            <div class="title-line">
+              <div class="section-title">Quick Forms</div>
+              <button
+                class="info-tip"
+                type="button"
+                aria-expanded="false"
+                aria-label="Quick Forms details: fill and copy separate form text. Quick Forms do not change the call note and use their own copy button."
+                data-tip="Fill and copy separate form text. Quick Forms do not change the call note and use their own copy button."
+              >?</button>
+            </div>
+            <p class="panel-summary" id="quickFormsSummary">Separate form text.</p>
+          </div>
+          <button class="quiet-button" id="toggleQuickForms" type="button" aria-expanded="true" aria-controls="quickFormsBody">Minimize</button>
+        </div>
+        <div class="panel-body" id="quickFormsBody">
+          <div class="setup-sub is-collapsed" id="quickFormSetup">
+            <div class="setup-sub-head">
+              <span class="subhead">Save a Quick Form</span>
+              <button
+                class="quiet-button setup-sub-toggle"
+                id="toggleQuickFormSetup"
+                type="button"
+                aria-expanded="false"
+                aria-controls="quickFormAdd"
+              >Add form</button>
+            </div>
+            <div class="quick-form-add setup-sub-body" id="quickFormAdd">
+              <label>
+                  <span class="subhead">Form name</span>
+                <input
+                  id="quickFormTitle"
+                  type="text"
+                  maxlength="80"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="General request"
+                >
+              </label>
+              <label>
+                  <span class="subhead">Form text to copy</span>
+                <textarea
+                  id="quickFormBody"
+                  rows="5"
+                  maxlength="4000"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  placeholder="Item:&#10;Context:&#10;Reason:&#10;Next step:"
+                ></textarea>
+              </label>
+              <button id="addQuickForm" type="button">Save Quick Form</button>
+            </div>
+          </div>
+          <div class="quick-form-list" id="quickFormList"></div>
+        </div>
+      </section>
+
+    </section>
+
+    <div class="finish-fallback" hidden aria-hidden="true">
+      <output class="note-output is-hidden" id="noteOutput" aria-live="polite"></output>
+      <textarea
+        class="note-editor"
+        id="noteEditor"
+        rows="4"
+        maxlength="5000"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-label="Edit final note"
+      ></textarea>
+      <p class="edit-notice" id="editNotice">
+        Temporary final-note edit. Copy will collapse this temporary text into one plain-text line.
+      </p>
+      <button id="editNote" type="button">Edit Final Note</button>
+    </div>
+
+    <section class="call-dock" id="callDock" aria-label="Current call actions">
+      <div class="dock-note-group">
+        <div class="dock-top-row">
+          <span class="status" id="status" data-tone="neutral" aria-live="polite">No note yet.</span>
+          <span class="edit-mode-cue" id="editModeCue" hidden>Edited</span>
+          <span class="dock-count"><strong id="dockPieceCount">0</strong> pieces</span>
+          <button class="quiet-button save-built-template dock-save-full-template" id="saveBuiltTemplate" type="button" title="Save the current built note as a Full Template">Save Full Template</button>
+        </div>
+        <div class="dock-preview-panel">
+          <output class="dock-preview" id="dockPreview" aria-live="polite" aria-label="Compact note preview"></output>
+          <button
+            class="list-resize dock-preview-resize"
+            id="resizeDockPreview"
+            type="button"
+            aria-label="Resize dock preview"
+            title="Drag to resize dock preview"
+          >
+            <span aria-hidden="true"></span>
+          </button>
+          <textarea
+            class="dock-note-editor"
+            id="dockNoteEditor"
+            rows="4"
+            maxlength="5000"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-label="Edit note from dock"
+          ></textarea>
+        </div>
+      </div>
+      <div class="quick-form-dock" id="quickFormDock" hidden aria-label="Active Quick Form">
+        <div class="quick-form-dock-head">
+          <span class="quick-form-dock-title" id="quickFormDockTitle">Quick Form</span>
+          <span class="quick-form-dock-status" id="quickFormDockStatus">Separate from call note</span>
+        </div>
+        <textarea
+          class="quick-form-editor"
+          id="quickFormEditor"
+          rows="4"
+          maxlength="4000"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Edit active Quick Form"
+        ></textarea>
+        <div class="quick-form-dock-actions">
+          <button class="primary" id="copyQuickForm" type="button" disabled>Copy Quick Form</button>
+          <button id="resetQuickForm" type="button" disabled>Reset Quick Form</button>
+          <button class="danger" id="clearQuickForm" type="button" disabled>Clear Quick Form</button>
+        </div>
+      </div>
+      <div class="dock-finish-controls" aria-label="Review and finish">
+        <div class="dock-ending-switch" aria-label="Required ending">
+          <button id="endCall" type="button" aria-pressed="true">Call Ended</button>
+          <button id="endTransfer" type="button" aria-pressed="false">Transferred To</button>
+        </div>
+        <input
+          class="dock-transfer-target"
+          id="transferTarget"
+          type="text"
+          maxlength="200"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Required transfer destination"
+          disabled
+        >
+      </div>
+      <div class="dock-actions">
+        <button id="dockEditNote" type="button">Edit note</button>
+        <button id="newCall" type="button">
+          <span class="wide-label">New Call + Clear Clipboard</span>
+          <span class="compact-label">New Call</span>
+        </button>
+        <button class="primary" id="copyNote" type="button" disabled>
+          <span id="copyNoteLabel">Copy Valid Note</span>
+          <span class="shortcut">⌘/Ctrl Enter</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js?v=20260628-chrome-min-fill-2" defer></script>
+</body>
+</html>

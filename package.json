@@ -1,0 +1,19 @@
+{
+  "name": "wrapdeck",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Static, session-only call-note sidecar with no backend, storage, analytics, or runtime network calls.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "check": "npm run check:js && npm run check:security && npm run check:release",
+    "check:js": "node --check app.js && node --check scripts/wrapdeck_regression_smoke.js",
+    "check:security": "./security-check.sh",
+    "check:release": "./release-check.sh",
+    "preview": "./preview.sh",
+    "smoke": "node scripts/wrapdeck_regression_smoke.js",
+    "prepare:deploy": "./prepare-deploy.sh"
+  },
+  "devDependencies": {
+    "playwright": "^1.55.0"
+  }
+}

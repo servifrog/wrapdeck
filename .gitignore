@@ -1,0 +1,13 @@
+.DS_Store
+.playwright-cli/
+.wrangler/
+output/
+public-build/
+.env
+.env.*
+*.log
+*.trace
+*.zip
+*.pem
+*.key
+*.crt

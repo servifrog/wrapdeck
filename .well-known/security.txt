@@ -1,0 +1,4 @@
+Contact: https://wrapdeck.app/security.html
+Policy: https://wrapdeck.app/security.html
+Preferred-Languages: en
+Canonical: https://wrapdeck.app/.well-known/security.txt
